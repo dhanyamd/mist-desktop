@@ -28,6 +28,8 @@ type Props = {
 }
 
 const MediaConfiguration = ({state, user} : Props) => {
+    const activeScreen = state?.displays?.find((screen) => screen.id == user?.studio?.screen)
+    const activeAudio = state?.audioInputs?.find((device) => device.deviceId == user?.studio?.mic)
     const {register, isPending, onPreset} = useStudioSettings(
       user?.id!,
       user?.studio?.screen || state.displays?.[0].id,
