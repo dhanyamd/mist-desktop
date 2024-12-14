@@ -1,4 +1,5 @@
-import { act, useReducer } from "react"
+import { getMediaResources } from "@/lib/utils"
+import {  useReducer } from "react"
 
 export type SourceDeviceProps = {
     displays? : {
@@ -9,7 +10,7 @@ export type SourceDeviceProps = {
         thumbnail : unknown
     }[],
     audioInputs? : {
-        devuceId: string
+        deviceId: string
         kind:string
         label : string
         groupId: string
@@ -39,7 +40,16 @@ export const useMediaResources = () => {
     })
     const fetchMediaResource = () => {
         action({type : "GET_DEVICES", payload : {isPending : true}})
-        getMediaResources()
+        getMediaResources().then((sources) => 
+        action({
+            type : "GET_DEVICES",
+            payload : {
+                displays : sources.displays,
+                audioInputs : sources.audio,
+                isPending : false
+            }
+        })
+    )
     }
     return {state, fetchMediaResource}
 }

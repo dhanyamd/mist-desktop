@@ -2,6 +2,8 @@ import { ClerkLoading, SignedIn, useUser } from "@clerk/clerk-react"
 import { Spinner } from "../Spinner"
 import { useEffect, useState } from "react"
 import { fetchUsersProfile } from "@/lib/utils"
+import { useMediaResources } from "@/hooks/useMediaResources"
+import MediaConfiguration from "../MediaConfiguration"
 
 const Widget = () => {
     const [profile, setProfile] = useState<{
@@ -30,7 +32,7 @@ const Widget = () => {
           |null
     } | null>(null)
     const {user} = useUser() 
-    const {state, fetchMediaResources} = useMediaResources()
+    const {state, fetchMediaResource} = useMediaResources()
     useEffect(() => {
         if(user && user.id){
             fetchUsersProfile(user.id).then((p) => setProfile(p))
@@ -43,15 +45,15 @@ const Widget = () => {
           <Spinner/>
         </div>
         </ClerkLoading> 
-        <SignedIn>
+       { <SignedIn>
             {profile ? (
-               <MediaConfiguration/>
+               <MediaConfiguration state={state} user={profile.user}/>
             ) : (
             <div className="w-full h-ful items-center justify-center flex">
            <Spinner color="#fff" />
             </div>
             )}
-        </SignedIn>
+        </SignedIn>}
     </div>
   )
 }
