@@ -1,4 +1,4 @@
-import { SourceDeviceProps } from '@/hooks/useMediaResources'
+import { SourceDeviceProps } from '@/hooks/useMediaSources'
 import { useStudioSettings } from '@/hooks/useStudioSettings'
 import { Spinner } from '../Spinner'
 import { Headphones, Monitor, Settings2 } from 'lucide-react'
@@ -39,6 +39,7 @@ const MediaConfiguration = ({state, user} : Props) => {
       user?.studio?.preset ,
       user?.subscription?.plan
     )
+    
   return ( 
   <form className='flex h-full relative w-full flex-col gap-y-5'>
      {isPending  && (
@@ -52,16 +53,19 @@ const MediaConfiguration = ({state, user} : Props) => {
         {...register('screen')}
         className='outline-none cursor-pointer px-5 py-2 rounded-xl border-2 text-white border-[#575655] bg-transparent w-full'
         >
-            {state.displays?.map((display, key) => (
+            {state?.displays?.map((display, key) => (
                 <option
                 selected={activeScreen && activeScreen.id === display.id}
                 value={display.id}
                 className='bg-[#171717] cursor-pointer'
                 key={key}
                 >
-                {display.name}
+                 {display.name } 
                 </option>
             ))}
+          <option>
+            Default screen
+          </option>
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>
@@ -70,16 +74,22 @@ const MediaConfiguration = ({state, user} : Props) => {
         {...register('audio')}
         className='outline-none cursor-pointer px-5 py-2 rounded-xl border-2 text-white border-[#575655] bg-transparent w-full'
         >
-            {state.audioInputs?.map((device, key) => (
+        
+            {state?.audioInputs?.map((device, key) => (
                 <option
                 selected={activeAudio && activeAudio.deviceId === device.deviceId}
                 value={device.deviceId}
                 className='bg-[#171717] cursor-pointer'
                 key={key}
                 >
-                {device.label}
+                {device.label }
                 </option>
+                
             ))}
+           <option>
+            Default audio
+           </option>
+            
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>
@@ -88,26 +98,22 @@ const MediaConfiguration = ({state, user} : Props) => {
         {...register('preset')}
         className='outline-none cursor-pointer px-5 py-2 rounded-xl border-2 text-white border-[#575655] bg-transparent w-full'
         >
-            {state.audioInputs?.map((device, key) => (
-                <><option
-                    disabled={user?.subscription?.plan == "FREE"}
-                    value={onPreset === "HD" || user?.studio?.preset == "HD"}
-                    className='bg-[#171717] cursor-pointer'
-                    key={key}
-                >
-                    1080p{' '}
-                    {user?.subscription?.plan == "FREE" && '(Upgrade to Pro Plan)'}
-                </option>
-                <option
-                    value={"SD"}
-                    selected={onPreset == 'SD' && user?.studio?.preset == "SD" }
-                    className='bg-[#171717] cursor-pointer'
-                    key={key}
-                >
-                        720p{' '}
-                    </option></>
-
-            ))}
+           <option
+           disabled={true}
+           selected={onPreset === 'HD' || user?.studio?.preset === 'HD'}
+           value={'HD'}
+           className='bg-[#171717] cursor-pointer'
+           >
+             1080p{' '}
+             {user?.subscription?.plan === "FREE" && '(Upgrade to PRO plan)'}
+           </option>
+           <option
+           value={'SD'}
+           selected={onPreset === "SD" || user?.studio?.preset === "SD"}
+           className='bg-[#171717] cursor-pointer'
+           >
+           720p
+           </option>
    </select>
      </div>
    </form>

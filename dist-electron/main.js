@@ -1,4 +1,4 @@
-import { app, ipcMain, desktopCapturer, BrowserWindow } from "electron";
+import { app, ipcMain, BrowserWindow, desktopCapturer } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -42,7 +42,7 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true,
+      //contextIsolation : true,
       devTools: true,
       preload: path.join(__dirname, "preload.mjs")
     }
@@ -102,15 +102,6 @@ ipcMain.on("closeApp", () => {
     floatingWebCam = null;
   }
 });
-ipcMain.handle("getSources", async () => {
-  const data = await desktopCapturer.getSources({
-    thumbnailSize: { height: 100, width: 150 },
-    fetchWindowIcons: true,
-    types: ["window", "screen"]
-  });
-  console.log("DISPLAYS", data);
-  return data;
-});
 ipcMain.on("media-sources", (event, payload) => {
   console.log(event);
   studio == null ? void 0 : studio.webContents.send("profile-received", payload);
@@ -133,6 +124,15 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+ipcMain.handle("getSources", async () => {
+  const data = await desktopCapturer.getSources({
+    thumbnailSize: { height: 100, width: 150 },
+    fetchWindowIcons: true,
+    types: ["window", "screen"]
+  });
+  console.log("DISPLAYS", data);
+  return data;
 });
 app.whenReady().then(createWindow);
 export {

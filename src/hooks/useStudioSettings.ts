@@ -44,6 +44,7 @@ export const useStudioSettings = (
         })
     }
   },[screen, audio, preset])
+
   useEffect(() => {
    const subscribe = watch((values) => {
     //@ts-ignore
@@ -53,18 +54,20 @@ export const useStudioSettings = (
         id,
         audio : values.audio!,
         //@ts-ignore
-        preset : values.preset!
-      }) 
-      window.ipcRenderer.send('media=sources', {
+        preset : values.preset!,
+      })
+      window.ipcRenderer.send('media-sources', {
         screen : values.screen!,
         id,
         audio : values.audio!,
         preset : values.preset!,
         plan
-      })
    })
+  
+}) 
+
    return () => subscribe.unsubscribe()
   },[watch])
-  
+
   return {register, isPending, onPreset}
 }

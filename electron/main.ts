@@ -59,7 +59,7 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       nodeIntegration : false,
-      contextIsolation : true,
+      //contextIsolation : true,
       devTools : true,
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -136,15 +136,7 @@ ipcMain.on('closeApp', () => {
   }
 })
 
-ipcMain.handle('getSources', async () => {
-const data = await desktopCapturer.getSources({
-    thumbnailSize : {height : 100, width : 150},
-    fetchWindowIcons : true,
-    types : ['window', 'screen']
-  })
-   console.log("DISPLAYS", data)
-   return data;
-})
+
 //@ts-ignore
 
 ipcMain.on('media-sources', (event, payload) => {
@@ -163,7 +155,6 @@ ipcMain.on('resize-studio', (event, payload) => {
     studio?.setSize(400, 250)
   }
 })
- //@ts-ignore
 
 ipcMain.on('hide-plugin', (event, payload) => {
   console.log(event)
@@ -177,6 +168,16 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+ipcMain.handle('getSources', async () => {
+  const data = await desktopCapturer.getSources({
+    thumbnailSize : {height : 100, width : 150},
+    fetchWindowIcons : true,
+    types : ['window', 'screen']
+  })
+   console.log("DISPLAYS", data)
+   return data;
 })
 
 app.whenReady().then(createWindow)

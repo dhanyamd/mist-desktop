@@ -18,13 +18,13 @@ export const fetchUsersProfile = async(clerkId : string) => {
   })
   return response.data
 }
-export const getMediaResources = async() => {
-  const displays = await window.ipcRenderer.invoke('getSources')
+export const getMediaSources = async () => {
+  const displays = await window.ipcRenderer.invoke('getSources');
   const enumerateDevices = await window.navigator.mediaDevices.enumerateDevices()
   const audioInputs = enumerateDevices.filter((
     device ) => device.kind === "audioinput")
     console.log("getting-sources")
-    return {displays, audio : audioInputs}
+    return {displays : displays, audio : audioInputs}
 }
 
 export const updateStudioSettings = async(
@@ -34,9 +34,9 @@ export const updateStudioSettings = async(
   preset : 'HD' | 'SD'
 ) => {
   const respone = await httpClient.post(`/studio/${id}`, {
-    screen,
-    audio,
-    preset
+    screen : screen,
+    audio : audio,
+    preset : preset
   },
   {
     headers : {
