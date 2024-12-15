@@ -43,7 +43,7 @@ export const useStudioSettings = (
             plan
         })
     }
-  },[])
+  },[screen, audio, preset])
   useEffect(() => {
    const subscribe = watch((values) => {
     //@ts-ignore
@@ -65,5 +65,6 @@ export const useStudioSettings = (
    })
    return () => subscribe.unsubscribe()
   },[watch])
+  
   return {register, isPending, onPreset}
 }

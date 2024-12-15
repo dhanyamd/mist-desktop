@@ -38,7 +38,7 @@ export const useMediaResources = () => {
         error : null ,
         isPending : false
     })
-    const fetchMediaResource = () => {
+    const fetchMediaResources = () => {
         action({type : "GET_DEVICES", payload : {isPending : true}})
         getMediaResources().then((sources) => 
         action({
@@ -51,5 +51,5 @@ export const useMediaResources = () => {
         })
     )
     }
-    return {state, fetchMediaResource}
+    return {state, fetchMediaResources}
 }

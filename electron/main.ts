@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, desktopCapturer, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -64,7 +64,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.mjs'),
     },
   })
-  
+
   floatingWebCam = new BrowserWindow({
     width : 400,
     height : 200,
@@ -114,8 +114,21 @@ function createWindow() {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+//@ts-ignore
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin') 
+    {
+    app.quit()
+    win=null
+    studio = null 
+    floatingWebCam = null
+  }
+})
+//@ts-ignore
+
+ipcMain.on('closeApp', () => {
+  if(process.platform !== "darwin")
+    {
     app.quit()
     win=null
     studio = null 
@@ -123,14 +136,41 @@ app.on('window-all-closed', () => {
   }
 })
 
-ipcMain.on('window-all-closed',() => {
-  if(process.platform !== "darwin"){
-    app.quit()
-    win=null
-    studio = null 
-    floatingWebCam = null
+ipcMain.handle('getSources', async () => {
+const data = await desktopCapturer.getSources({
+    thumbnailSize : {height : 100, width : 150},
+    fetchWindowIcons : true,
+    types : ['window', 'screen']
+  })
+   console.log("DISPLAYS", data)
+   return data;
+})
+//@ts-ignore
+
+ipcMain.on('media-sources', (event, payload) => {
+  console.log(event)
+  studio?.webContents.send('profile-received', payload)
+})
+//@ts-ignore
+
+ipcMain.on('resize-studio', (event, payload) => {
+  console.log(event)
+  if (payload.shrink) {
+    studio?.setSize(400,100)
+  }
+  if (!payload.shrink) {
+    console.log(event) 
+    studio?.setSize(400, 250)
   }
 })
+ //@ts-ignore
+
+ipcMain.on('hide-plugin', (event, payload) => {
+  console.log(event)
+  win?.webContents.send('hide-plugin', payload)
+})
+//@ts-ignore
+
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

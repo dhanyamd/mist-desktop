@@ -31,12 +31,15 @@ const Widget = () => {
             }) 
           |null
     } | null>(null)
-    const {user} = useUser() 
-    const {state, fetchMediaResource} = useMediaResources()
+    const { user } = useUser() 
+    const {state, fetchMediaResources} = useMediaResources();
+
     useEffect(() => {
         if(user && user.id){
-            fetchUsersProfile(user.id).then((p) => setProfile(p))
-        }
+            fetchUsersProfile(user.id).then((p) => {
+              setProfile(p)}
+          )}
+        
     },[user])
   return (
     <div className="p-5">
@@ -45,17 +48,15 @@ const Widget = () => {
           <Spinner/>
         </div>
         </ClerkLoading> 
-       { <SignedIn>
-            {profile ? (
-               <MediaConfiguration state={state} user={profile.user}/>
-            ) : (
-            <div className="w-full h-ful items-center justify-center flex">
-           <Spinner color="#fff" />
-            </div>
-            )}
-        </SignedIn>}
-    </div>
-  )
-}
+       <SignedIn>
+       {profile && (
+        <div>
+          <MediaConfiguration state={state} user={profile.user!}/>
+        </div>
+       )}
+      
+       </SignedIn>
+          </div>
+  )}
 
 export default Widget
