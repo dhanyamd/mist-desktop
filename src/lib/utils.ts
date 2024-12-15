@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import axios from "axios"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -19,10 +20,10 @@ export const fetchUsersProfile = async(clerkId : string) => {
   return response.data
 }
 export const getMediaSources = async () => {
-  const displays = await window.ipcRenderer.invoke('getSources');
-  const enumerateDevices = await window.navigator.mediaDevices.enumerateDevices()
-  const audioInputs = enumerateDevices.filter((
-    device ) => device.kind === "audioinput")
+  const displays = await window.ipcRenderer.invoke('getSources')
+  const enumerateDevices = 
+  await window.navigator.mediaDevices.enumerateDevices()
+  const audioInputs = enumerateDevices.filter(( device ) => device.kind === "audioinput")
     console.log("getting-sources")
     return {displays : displays, audio : audioInputs}
 }
@@ -44,5 +45,9 @@ export const updateStudioSettings = async(
     }
   }
 )
-return respone.data 
+return respone.data
+}
+
+export const hidePluginWindow = (state : boolean) => {
+  window.ipcRenderer.send('hide-plugin', {state})
 }

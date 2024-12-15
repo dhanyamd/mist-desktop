@@ -32,7 +32,7 @@ const Widget = () => {
           |null
     } | null>(null)
     const { user } = useUser() 
-    const {state, fetchMediaResources} = useMediaSources();
+    const {state} = useMediaSources();
     useEffect(() => {
         if(user && user.id){
             fetchUsersProfile(user.id).then((p) => {
@@ -51,7 +51,7 @@ const Widget = () => {
        <SignedIn>
        {profile && (
         <div>
-          <MediaConfiguration state={state} user={profile.user!}/>
+          <MediaConfiguration state={state}  user={profile.user!}/>
         </div>
        )}
         

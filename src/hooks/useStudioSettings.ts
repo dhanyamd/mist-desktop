@@ -29,12 +29,12 @@ export const useStudioSettings = (
     }) => updateStudioSettings(data.id, data.screen, data.audio, data.preset),
     onSuccess: (data) => {
         return toast(data.status == 200 ? "Success" : "Error", {
-            description : data.message
+            description : data?.message
         })
     }
   })
   useEffect(() => {
-    if(screen && audio && preset){
+    if(screen && audio){
         window.ipcRenderer.send('media-sources', {
             screen,
             id : id,
@@ -43,18 +43,18 @@ export const useStudioSettings = (
             plan
         })
     }
-  },[screen, audio, preset])
+  },[screen, audio])
 
   useEffect(() => {
    const subscribe = watch((values) => {
     //@ts-ignore
-      setPreset(values.preset!)
+      setPreset(values.preset)
       mutate({
         screen : values.screen!,
         id,
         audio : values.audio!,
         //@ts-ignore
-        preset : values.preset!,
+        preset : values.preset,
       })
       window.ipcRenderer.send('media-sources', {
         screen : values.screen!,

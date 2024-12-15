@@ -39,7 +39,6 @@ const MediaConfiguration = ({state, user} : Props) => {
       user?.studio?.preset ,
       user?.subscription?.plan
     )
-    
   return ( 
   <form className='flex h-full relative w-full flex-col gap-y-5'>
      {isPending  && (
@@ -63,9 +62,9 @@ const MediaConfiguration = ({state, user} : Props) => {
                  {display.name } 
                 </option>
             ))}
-          <option>
-            Default screen
-          </option>
+           <option>
+            Default screen 
+           </option>
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>

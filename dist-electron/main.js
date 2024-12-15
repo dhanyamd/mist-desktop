@@ -1,4 +1,4 @@
-import { app, ipcMain, BrowserWindow, desktopCapturer } from "electron";
+import { app, ipcMain, desktopCapturer, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +17,7 @@ function createWindow() {
     minHeight: 600,
     minWidth: 300,
     frame: false,
+    hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
     focusable: false,
@@ -36,13 +37,14 @@ function createWindow() {
     minWidth: 300,
     maxWidth: 400,
     frame: false,
+    hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
     focusable: false,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
-      //contextIsolation : true,
+      contextIsolation: true,
       devTools: true,
       preload: path.join(__dirname, "preload.mjs")
     }
@@ -55,6 +57,7 @@ function createWindow() {
     minWidth: 300,
     maxWidth: 400,
     frame: false,
+    hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
     focusable: false,
@@ -102,29 +105,6 @@ ipcMain.on("closeApp", () => {
     floatingWebCam = null;
   }
 });
-ipcMain.on("media-sources", (event, payload) => {
-  console.log(event);
-  studio == null ? void 0 : studio.webContents.send("profile-received", payload);
-});
-ipcMain.on("resize-studio", (event, payload) => {
-  console.log(event);
-  if (payload.shrink) {
-    studio == null ? void 0 : studio.setSize(400, 100);
-  }
-  if (!payload.shrink) {
-    console.log(event);
-    studio == null ? void 0 : studio.setSize(400, 250);
-  }
-});
-ipcMain.on("hide-plugin", (event, payload) => {
-  console.log(event);
-  win == null ? void 0 : win.webContents.send("hide-plugin", payload);
-});
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
 ipcMain.handle("getSources", async () => {
   const data = await desktopCapturer.getSources({
     thumbnailSize: { height: 100, width: 150 },
@@ -134,7 +114,26 @@ ipcMain.handle("getSources", async () => {
   console.log("DISPLAYS", data);
   return data;
 });
+ipcMain.on("media-sources", (event, payload) => {
+  studio == null ? void 0 : studio.webContents.send("profile-received", payload);
+});
 app.whenReady().then(createWindow);
+ipcMain.on("resize-studio", (_, payload) => {
+  if (payload.shrink) {
+    studio == null ? void 0 : studio.setSize(400, 100);
+  }
+  if (!payload.shrink) {
+    studio == null ? void 0 : studio.setSize(400, 250);
+  }
+});
+ipcMain.on("hide-plugin", (event, payload) => {
+  win == null ? void 0 : win.webContents.send("hide-plugin", payload);
+});
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,

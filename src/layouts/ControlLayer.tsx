@@ -10,8 +10,7 @@ type Props = {
 
 const ControlLayer = ({children, className} : Props) => {
     const[isVisible, setIsVisible] = useState<boolean>(false)
-    window.ipcRenderer.on('hide-plugin', (event, payload) => {
-        console.log(event);
+     window.ipcRenderer.on('hide-plugin', (event, payload) => {
         setIsVisible(payload.state)
     })
   return (

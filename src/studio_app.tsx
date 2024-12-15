@@ -1,5 +1,7 @@
-function App(){
-    return <h1> </h1>
+import StudioTray from "./components/Global/StudioTray"
+
+function App () {
+   return <StudioTray />
 }
 
-export default App 
+export default App

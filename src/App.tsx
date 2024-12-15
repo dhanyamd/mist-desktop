@@ -10,9 +10,9 @@ const client = new QueryClient()
 function App() {
   return <QueryClientProvider client={client}>
     <ControlLayer>
-      <AuthButton/>
+      <AuthButton/> 
       <Widget />
-    </ControlLayer>
+  </ControlLayer>
   <Toaster/>
   </QueryClientProvider>
 }

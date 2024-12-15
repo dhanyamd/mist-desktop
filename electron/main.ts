@@ -33,6 +33,7 @@ function createWindow() {
     minHeight: 600,
     minWidth : 300,
     frame : false,
+    hasShadow : false,
     transparent : true,
     alwaysOnTop : true,
     focusable : false,
@@ -53,13 +54,14 @@ function createWindow() {
     minWidth : 300,
     maxWidth : 400,
     frame : false,
+    hasShadow : false,
     transparent : true,
     alwaysOnTop : true,
     focusable : false,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       nodeIntegration : false,
-      //contextIsolation : true,
+      contextIsolation : true,
       devTools : true,
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -73,6 +75,7 @@ function createWindow() {
     minWidth : 300,
     maxWidth : 400,
     frame : false,
+    hasShadow : false,
     transparent : true,
     alwaysOnTop : true,
     focusable : false,
@@ -84,7 +87,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.mjs'),
     },
   })
-
+ //  console.log(state)
   win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen : true})
   win.setAlwaysOnTop(true, 'screen-saver', 1)
   studio.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen : true})
@@ -114,7 +117,6 @@ function createWindow() {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-//@ts-ignore
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') 
     {
@@ -124,49 +126,14 @@ app.on('window-all-closed', () => {
     floatingWebCam = null
   }
 })
-//@ts-ignore
 
 ipcMain.on('closeApp', () => {
   if(process.platform !== "darwin")
     {
     app.quit()
-    win=null
+    win = null
     studio = null 
     floatingWebCam = null
-  }
-})
-
-
-//@ts-ignore
-
-ipcMain.on('media-sources', (event, payload) => {
-  console.log(event)
-  studio?.webContents.send('profile-received', payload)
-})
-//@ts-ignore
-
-ipcMain.on('resize-studio', (event, payload) => {
-  console.log(event)
-  if (payload.shrink) {
-    studio?.setSize(400,100)
-  }
-  if (!payload.shrink) {
-    console.log(event) 
-    studio?.setSize(400, 250)
-  }
-})
-
-ipcMain.on('hide-plugin', (event, payload) => {
-  console.log(event)
-  win?.webContents.send('hide-plugin', payload)
-})
-//@ts-ignore
-
-app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
   }
 })
 
@@ -177,7 +144,35 @@ ipcMain.handle('getSources', async () => {
     types : ['window', 'screen']
   })
    console.log("DISPLAYS", data)
-   return data;
+   return data
 })
 
+ipcMain.on('media-sources', (event, payload) => {
+  studio?.webContents.send('profile-received', payload)
+})
+
+
 app.whenReady().then(createWindow)
+
+ipcMain.on('resize-studio', (_, payload) => {
+  if (payload.shrink) {
+    studio?.setSize(400,100)
+  }
+  if (!payload.shrink) {
+    studio?.setSize(400, 250)
+  }
+})
+
+ipcMain.on('hide-plugin', (event, payload) => {
+  win?.webContents.send('hide-plugin', payload)
+})
+
+app.on('activate', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
+
+
