@@ -3,7 +3,6 @@ import {v4 as uuid} from "uuid"
 
 let videoTransferFileName : string | undefined 
 let mediaRecorder : MediaRecorder  
-
 export const StartRecording = (onSources : {
     screen : string,
     audio : string,
@@ -14,3 +13,4 @@ export const StartRecording = (onSources : {
     //@ts-ignore
     mediaRecorder.start(1000)
 }
+export let onStopRecording : () => mediaRecorder.stop;
