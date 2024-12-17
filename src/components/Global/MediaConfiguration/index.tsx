@@ -38,7 +38,7 @@ const MediaConfiguration = ({state, user} : Props) => {
       user?.studio?.preset ,
       user?.subscription?.plan
     )
-   
+   console.log('state')
   return ( 
   <form className='flex h-full relative w-full flex-col gap-y-5'>
      {isPending  && (
@@ -63,7 +63,7 @@ const MediaConfiguration = ({state, user} : Props) => {
                 </option>
             ))}
          <option>
-         Default screen
+            Default screen
          </option>
    </select>
      </div>
@@ -85,9 +85,9 @@ const MediaConfiguration = ({state, user} : Props) => {
                 </option>
                 
             ))}
-           <option>
+         <option>
             Default audio
-           </option>
+         </option>
             
    </select>
      </div>

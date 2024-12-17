@@ -1,9 +1,11 @@
 import { hidePluginWindow } from "./utils"
 import {v4 as uuid} from "uuid"
+import io from "socket.io-client"
 
 let videoTransferFileName : string | undefined 
 let mediaRecorder : MediaRecorder 
 let userId : string | undefined
+const socket = io(import.meta.env.VITE_SOCKET_URL as string)
 export const StartRecording = (onSources : {
     screen : string,
     audio : string,
@@ -14,8 +16,20 @@ export const StartRecording = (onSources : {
     //@ts-ignore
     mediaRecorder.start(1000)
 }
-export let onStopRecording = () => mediaRecorder.stop();
-
+export const onStopRecording = () => mediaRecorder.stop();
+const stopRecording = () => {
+    hidePluginWindow(false)
+    socket.emit('process-chunks', {
+        filename : videoTransferFileName ,
+        userId
+    })
+}
+export const onDataAvailable = (e : BlobEvent) => {
+  socket.emit('video-chunks', {
+    chunks : e.data,
+    filename : videoTransferFileName
+  })
+}
 export const selectSources = async(
     onSources : {
         screen : string
@@ -58,5 +72,7 @@ export const selectSources = async(
     mediaRecorder = new MediaRecorder(combineStream, {
         mimeType : 'video/webm; codecs=vp9'
     })
+    mediaRecorder.ondataavailable = onDataAvailable
+    mediaRecorder.onstart = stopRecording
  }
 }
