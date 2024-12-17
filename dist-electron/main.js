@@ -106,6 +106,7 @@ ipcMain.on("closeApp", () => {
   }
 });
 ipcMain.handle("getSources", async () => {
+  console.log("GET SOURCES");
   const data = await desktopCapturer.getSources({
     thumbnailSize: { height: 100, width: 150 },
     fetchWindowIcons: true,
@@ -115,6 +116,7 @@ ipcMain.handle("getSources", async () => {
   return data;
 });
 ipcMain.on("media-sources", (event, payload) => {
+  console.log("PAYLOAD", payload);
   studio == null ? void 0 : studio.webContents.send("profile-received", payload);
 });
 app.whenReady().then(createWindow);
@@ -127,6 +129,7 @@ ipcMain.on("resize-studio", (_, payload) => {
   }
 });
 ipcMain.on("hide-plugin", (event, payload) => {
+  console.log("PAYLOAD", payload);
   win == null ? void 0 : win.webContents.send("hide-plugin", payload);
 });
 app.on("activate", () => {

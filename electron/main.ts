@@ -138,6 +138,7 @@ ipcMain.on('closeApp', () => {
 })
 
 ipcMain.handle('getSources', async () => {
+  console.log("GET SOURCES")
   const data = await desktopCapturer.getSources({
     thumbnailSize : {height : 100, width : 150},
     fetchWindowIcons : true,
@@ -148,6 +149,7 @@ ipcMain.handle('getSources', async () => {
 })
 
 ipcMain.on('media-sources', (event, payload) => {
+  console.log("PAYLOAD", payload)
   studio?.webContents.send('profile-received', payload)
 })
 
@@ -164,6 +166,7 @@ ipcMain.on('resize-studio', (_, payload) => {
 })
 
 ipcMain.on('hide-plugin', (event, payload) => {
+  console.log("PAYLOAD", payload)
   win?.webContents.send('hide-plugin', payload)
 })
 
@@ -174,5 +177,4 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
 

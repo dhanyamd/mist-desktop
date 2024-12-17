@@ -2,6 +2,7 @@ import { SourceDeviceProps } from '@/hooks/useMediaSources'
 import { useStudioSettings } from '@/hooks/useStudioSettings'
 import { Spinner } from '../Spinner'
 import { Headphones, Monitor, Settings2 } from 'lucide-react'
+import { useEffect } from 'react'
 
 type Props = {
     state : SourceDeviceProps
@@ -31,14 +32,36 @@ type Props = {
 const MediaConfiguration = ({state, user} : Props) => {
     const activeScreen = state?.displays?.find((screen) => screen.id == user?.studio?.screen)
     const activeAudio = state?.audioInputs?.find((device) => device.deviceId == user?.studio?.mic)
-    const {register, isPending, onPreset} = useStudioSettings(
+    const { register, isPending, onPreset, responseData } = useStudioSettings(
       user?.id!,
       user?.studio?.screen || state.displays?.[0]?.id, 
       user?.studio?.mic || state.audioInputs?.[0]?.deviceId,
       user?.studio?.preset ,
       user?.subscription?.plan
     )
-   console.log('state')
+    console.log("STATE", state)
+    console.log("RESPONSE DATA", responseData)
+    useEffect(() => {
+        const requestMediaAccess = async () => {
+            try {
+                // Request microphone access
+                await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Request screen capture access
+                await navigator.mediaDevices.getDisplayMedia({ 
+                    video: {
+                       // cursor: "always" as const,
+                        displaySurface: "monitor" as const
+                    } as DisplayMediaStreamOptions["video"],
+                    audio: false 
+                });
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+            }
+        };
+        
+        requestMediaAccess();
+    }, []);
   return ( 
   <form className='flex h-full relative w-full flex-col gap-y-5'>
      {isPending  && (
@@ -85,10 +108,9 @@ const MediaConfiguration = ({state, user} : Props) => {
                 </option>
                 
             ))}
-         <option>
+            <option>
             Default audio
          </option>
-            
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>

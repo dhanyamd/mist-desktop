@@ -33,6 +33,7 @@ const Widget = () => {
     } | null>(null)
     const { user } = useUser() 
     const {state} = useMediaSources();
+    console.log(state)
     useEffect(() => {
         if(user && user.id){
             fetchUsersProfile(user.id).then((p) => {

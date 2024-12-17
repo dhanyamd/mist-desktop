@@ -1,5 +1,5 @@
 import { onStopRecording, selectSources, StartRecording } from "@/lib/recorder"
-import { cn, videoRecordingTime } from "@/lib/utils"
+import { cn, resizeWindow, videoRecordingTime } from "@/lib/utils"
 import { Cast, Pause, Square } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
@@ -9,16 +9,13 @@ const StudioTray = () => {
     const[onTimer, setOnTimer] = useState<string>('00:00:00')
     const[recording, setRecording] = useState(false)
     const[count, setCount] = useState(0)
-    const[onSources, setOnSources] = useState<
-   | {
-    screen : string,
-    id : string,
-    audio: string,
-    preset : 'HD' | 'SD',
-    plan : 'FREE' | 'PRO'
-   }
-   | undefined  
-   >(true)  
+    const[onSources, setOnSources] = useState<{
+        screen: string;
+        id: string;
+        audio: string;
+        preset: 'HD' | 'SD';
+        plan: 'FREE' | 'PRO';
+    } | undefined>(true);
    
   const clearTime = () => {
     setOnTimer('00:00:00')
@@ -36,6 +33,11 @@ const StudioTray = () => {
      return () => {
     selectSources(onSources!, videoElement)}
     },[onSources])
+
+    useEffect(() => {
+       resizeWindow(preview)
+       return () => resizeWindow(preview)
+    },[preview])
 
     useEffect(() => {
      if(!recording) return

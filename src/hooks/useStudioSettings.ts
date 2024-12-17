@@ -13,6 +13,7 @@ export const useStudioSettings = (
     plan? : 'PRO' | 'FREE'
 ) => {
  const [onPreset, setPreset] = useState<'HD' | 'SD' | undefined>()
+ const[responseData, setResponseData] = useState<any>(null)
   const {register, watch} = useZodForm(updateStudioSettingsSchema, {
     screen : screen!,
     audio : audio!,
@@ -33,17 +34,63 @@ export const useStudioSettings = (
         })
     }
   })
+
+
   useEffect(() => {
     if(screen && audio){
+        // Request media permissions
+        const requestMediaAccess = async () => {
+            try {
+                // Get audio stream
+                const audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        deviceId: audio ? { exact: audio } : undefined
+                    },
+                    video: false 
+                });
+
+                // Get screen stream
+                const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+                    video: {
+                        cursor: "always",
+                        displaySurface: "monitor",
+                        deviceId: screen ? { exact: screen } : undefined
+                    },
+                    audio: false 
+                });
+
+                // Store streams in state or handle them as needed
+                setResponseData({ audioStream, screenStream });
+                
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                toast.error("Failed to access media devices");
+            }
+        };
+        
+        requestMediaAccess();
+        
+        // Listen for responses from main process
+        const handleResponse = (_: any, data: any) => {
+            setResponseData(prev => ({...prev, ...data}));
+        }
+        
+        window.ipcRenderer.on('response-channel', handleResponse);
+        
+        // Existing IPC call
         window.ipcRenderer.send('media-sources', {
             screen,
-            id : id,
+            id,
             audio,
             preset,
             plan
-        })
+        });
+
+        return () => {
+            window.ipcRenderer.removeListener('response-channel', handleResponse);
+        }
     }
-  },[screen, audio])
+  }, [screen, audio, id, preset, plan]);
 
   useEffect(() => {
    const subscribe = watch((values) => {
@@ -69,5 +116,5 @@ export const useStudioSettings = (
    return () => subscribe.unsubscribe()
   },[watch])
 
-  return {register, isPending, onPreset}
+  return {register, isPending, onPreset, responseData}
 }
