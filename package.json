@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "electron main.ts",
+    "package": "build"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.20.0",
@@ -88,3 +90,5 @@
   },
   "main": "dist-electron/main.js"
 }
+
+

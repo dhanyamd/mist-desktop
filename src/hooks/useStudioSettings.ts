@@ -34,8 +34,6 @@ export const useStudioSettings = (
         })
     }
   })
-
-
   useEffect(() => {
     if(screen && audio){
         // Request media permissions
@@ -52,7 +50,8 @@ export const useStudioSettings = (
                 // Get screen stream
                 const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
                     video: {
-                        cursor: "always",
+                        //@ts-ignore
+                        cursor: "always" ,
                         displaySurface: "monitor",
                         deviceId: screen ? { exact: screen } : undefined
                     },
@@ -72,10 +71,10 @@ export const useStudioSettings = (
         
         // Listen for responses from main process
         const handleResponse = (_: any, data: any) => {
-            setResponseData(prev => ({...prev, ...data}));
+            setResponseData((prev: any) => ({...prev, ...data}));
         }
         
-        window.ipcRenderer.on('response-channel', handleResponse);
+        window.ipcRenderer.on('profile-received', handleResponse);
         
         // Existing IPC call
         window.ipcRenderer.send('media-sources', {
@@ -87,7 +86,7 @@ export const useStudioSettings = (
         });
 
         return () => {
-            window.ipcRenderer.removeListener('response-channel', handleResponse);
+            window.ipcRenderer.removeListener('profile-received', handleResponse);
         }
     }
   }, [screen, audio, id, preset, plan]);

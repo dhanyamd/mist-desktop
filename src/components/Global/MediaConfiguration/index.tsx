@@ -41,7 +41,7 @@ const MediaConfiguration = ({state, user} : Props) => {
     )
     console.log("STATE", state)
     console.log("RESPONSE DATA", responseData)
-    useEffect(() => {
+   useEffect(() => {
         const requestMediaAccess = async () => {
             try {
                 // Request microphone access
@@ -56,13 +56,15 @@ const MediaConfiguration = ({state, user} : Props) => {
                     audio: false 
                 });
             } catch (error) {
+                console.log("ERROR", error)
                 console.error('Error accessing media devices:', error);
             }
         };
         
         requestMediaAccess();
-    }, []);
-  return ( 
+    }, [activeScreen, activeAudio])
+    console.log(state?.displays)
+      return ( 
   <form className='flex h-full relative w-full flex-col gap-y-5'>
      {isPending  && (
         <div className='fixed z-50 w-full top-0 left-0 right-0 bottom-0 rounded-3xl h-full bg-black/80 flex justify-center items-center'>
@@ -82,10 +84,10 @@ const MediaConfiguration = ({state, user} : Props) => {
                 className='bg-[#171717] cursor-pointer'
                 key={key}
                 >
-                 {display.name } 
+                 {display?.name } 
                 </option>
             ))}
-         <option>
+      <option>
             Default screen
          </option>
    </select>
