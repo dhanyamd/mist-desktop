@@ -54,7 +54,7 @@ export const selectSources = async(
              },
         },
     }
-    userId : onSources.id
+    userId = onSources.id
     const stream = await navigator.mediaDevices.getUserMedia(constraints)
 
     const audioStream = await navigator.mediaDevices.getUserMedia({

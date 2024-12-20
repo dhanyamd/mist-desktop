@@ -32,16 +32,15 @@ const Widget = () => {
           |null
     } | null>(null)
     const { user } = useUser() 
-    const {state} = useMediaSources();
+    const {state, fetchMediaResources} = useMediaSources();
     console.log(state)
-    useEffect(() => {
-        if(user && user.id){
-            fetchUsersProfile(user.id).then((p) => {
-              setProfile(p)
-            }
-          )}
-        
-    },[user])
+   useEffect(() => {
+    if(user && user.id){
+      fetchUsersProfile(user.id).then((p) => setProfile(p))
+      fetchMediaResources()
+    }
+  },[user])
+  console.log(profile)
   return (
     <div className="p-5">
       <ClerkLoading>
@@ -50,9 +49,9 @@ const Widget = () => {
         </div>
         </ClerkLoading> 
        <SignedIn>
-       {profile && (
+       {profile && profile.user && (
         <div>
-          <MediaConfiguration state={state}  user={profile.user!}/>
+          <MediaConfiguration state={state} user={profile.user!}/>
         </div>
        )}
         

@@ -44,14 +44,14 @@ export const useStudioSettings = (
                     audio: {
                         deviceId: audio ? { exact: audio } : undefined
                     },
-                    video: false 
+                    video: false  
                 });
 
                 // Get screen stream
                 const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
                     video: {
                         //@ts-ignore
-                        cursor: "always" ,
+                      //  cursor: "always" ,
                         displaySurface: "monitor",
                         deviceId: screen ? { exact: screen } : undefined
                     },

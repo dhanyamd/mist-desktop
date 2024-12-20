@@ -15,7 +15,7 @@ const StudioTray = () => {
         audio: string;
         preset: 'HD' | 'SD';
         plan: 'FREE' | 'PRO';
-    } | undefined>(true);
+    } | undefined>({screen: '', id: '', audio: '', preset: 'HD', plan: 'FREE'});
    
   const clearTime = () => {
     setOnTimer('00:00:00')

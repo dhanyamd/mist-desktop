@@ -20,12 +20,16 @@ export const fetchUsersProfile = async(clerkId : string) => {
   return response.data
 }
 export const getMediaSources = async () => {
+  if (!window.ipcRenderer) {
+    throw new Error('ipcRenderer is not available');
+  }
+  
   const displays = await window.ipcRenderer.invoke('getSources')
-  const enumerateDevices = 
-  await window.navigator.mediaDevices.enumerateDevices()
-  const audioInputs = enumerateDevices.filter(( device ) => device.kind === "audioinput")
-    console.log("getting-sources")
-    return {displays : displays, audio : audioInputs}
+  const enumerateDevices = await window.navigator.mediaDevices.enumerateDevices()
+  const audioInputs = enumerateDevices.filter((device) => device.kind === "audioinput")
+  
+  console.log("getting-sources");
+  return { displays: displays, audio: audioInputs };
 }
 
 export const updateStudioSettings = async(

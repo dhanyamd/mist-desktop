@@ -5,7 +5,7 @@ import { Headphones, Monitor, Settings2 } from 'lucide-react'
 import { useEffect } from 'react'
 
 type Props = {
-    state : SourceDeviceProps
+    state : SourceDeviceProps | undefined
     user : 
 | ({
     subscription : {
@@ -30,17 +30,22 @@ type Props = {
 | null 
 }
 const MediaConfiguration = ({state, user} : Props) => {
-    const activeScreen = state?.displays?.find((screen) => screen.id == user?.studio?.screen)
-    const activeAudio = state?.audioInputs?.find((device) => device.deviceId == user?.studio?.mic)
-    const { register, isPending, onPreset, responseData } = useStudioSettings(
+
+
+   
+    console.log("STATE", state)
+    const activeScreen = state?.displays?.find((screen) => screen.id === user?.studio?.screen) || null;
+    const activeAudio = state?.audioInputs?.find((device) => device.deviceId === user?.studio?.mic) || null;
+    const { register, isPending, onPreset } = useStudioSettings(
+    
       user?.id!,
-      user?.studio?.screen || state.displays?.[0]?.id, 
-      user?.studio?.mic || state.audioInputs?.[0]?.deviceId,
-      user?.studio?.preset ,
+      user?.studio?.screen || state?.displays?.[0]?.id, 
+      user?.studio?.mic || state?.audioInputs?.[0]?.deviceId,
+      user?.studio?.preset,
       user?.subscription?.plan
     )
     console.log("STATE", state)
-    console.log("RESPONSE DATA", responseData)
+
     useEffect(() => {
         const requestMediaAccess =  async() => {
             try {
@@ -52,7 +57,7 @@ const MediaConfiguration = ({state, user} : Props) => {
                     video: {
                         displaySurface: "monitor" as const
                     } as DisplayMediaStreamOptions["video"],
-                    audio: true 
+                    audio: false 
                 });
                 console.log("MEDIA ACCESS GRANTED")
                 console.log("ACTIVE SCREEN", activeScreen)
@@ -67,7 +72,7 @@ const MediaConfiguration = ({state, user} : Props) => {
             }
         };
         
-        requestMediaAccess();
+        requestMediaAccess()
     }, [activeScreen, activeAudio])
     console.log(state)
       return ( 
@@ -85,6 +90,7 @@ const MediaConfiguration = ({state, user} : Props) => {
         >
             {state?.displays?.map((display, key) => (
                 <option
+                //selected={ activeScreen?.id === display.id}
                 value={display.id}
                 className='bg-[#171717] cursor-pointer'
                 key={key}
@@ -92,9 +98,7 @@ const MediaConfiguration = ({state, user} : Props) => {
                  {display?.name } 
                 </option>
             ))}
-    <option value="">
-        Default screen
-    </option>
+   
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>
@@ -106,6 +110,7 @@ const MediaConfiguration = ({state, user} : Props) => {
         
             {state?.audioInputs?.map((device, key) => (
                 <option
+                //selected={ activeAudio?.deviceId === device.deviceId}
                 value={device.deviceId}
                 className='bg-[#171717] cursor-pointer'
                 key={key}
@@ -114,9 +119,7 @@ const MediaConfiguration = ({state, user} : Props) => {
                 </option>
                 
             ))}
-           <option value="">
-            Default microphone
-         </option>
+         
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>
