@@ -1,7 +1,7 @@
 import WebCam from "./components/Global/WebCam"
 
 function App(){
-    return <WebCam />
+    return 
 }
 
 export default App 

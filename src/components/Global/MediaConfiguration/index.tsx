@@ -41,29 +41,35 @@ const MediaConfiguration = ({state, user} : Props) => {
     )
     console.log("STATE", state)
     console.log("RESPONSE DATA", responseData)
-   useEffect(() => {
-        const requestMediaAccess = async () => {
+    useEffect(() => {
+        const requestMediaAccess =  async() => {
             try {
                 // Request microphone access
-                await navigator.mediaDevices.getUserMedia({ audio: true });
+               await  navigator.mediaDevices.getUserMedia({ audio: true, video: true });
                 
                 // Request screen capture access
-                await navigator.mediaDevices.getDisplayMedia({ 
+               await  navigator.mediaDevices.getDisplayMedia({ 
                     video: {
-                       // cursor: "always" as const,
                         displaySurface: "monitor" as const
                     } as DisplayMediaStreamOptions["video"],
-                    audio: false 
+                    audio: true 
                 });
-            } catch (error) {
-                console.log("ERROR", error)
-                console.error('Error accessing media devices:', error);
+                console.log("MEDIA ACCESS GRANTED")
+                console.log("ACTIVE SCREEN", activeScreen)
+                console.log("ACTIVE AUDIO", activeAudio)
+                console.log(state)
+            } catch (error : unknown) {
+                if (error instanceof Error && error.name === 'NotReadableError') {
+                    console.error('Media device is already in use. Please close other applications using the device.');
+                } else {
+                    console.error('Error accessing media devices:', error);
+                }
             }
         };
         
         requestMediaAccess();
     }, [activeScreen, activeAudio])
-    console.log(state?.displays)
+    console.log(state)
       return ( 
   <form className='flex h-full relative w-full flex-col gap-y-5'>
      {isPending  && (
@@ -79,7 +85,6 @@ const MediaConfiguration = ({state, user} : Props) => {
         >
             {state?.displays?.map((display, key) => (
                 <option
-                selected={activeScreen && activeScreen.id === display.id}
                 value={display.id}
                 className='bg-[#171717] cursor-pointer'
                 key={key}
@@ -87,9 +92,9 @@ const MediaConfiguration = ({state, user} : Props) => {
                  {display?.name } 
                 </option>
             ))}
-      <option>
-            Default screen
-         </option>
+    <option value="">
+        Default screen
+    </option>
    </select>
      </div>
      <div className='flex gap-x-5 justify-center items-center'>
@@ -101,7 +106,6 @@ const MediaConfiguration = ({state, user} : Props) => {
         
             {state?.audioInputs?.map((device, key) => (
                 <option
-                selected={activeAudio && activeAudio.deviceId === device.deviceId}
                 value={device.deviceId}
                 className='bg-[#171717] cursor-pointer'
                 key={key}
@@ -110,8 +114,8 @@ const MediaConfiguration = ({state, user} : Props) => {
                 </option>
                 
             ))}
-            <option>
-            Default audio
+           <option value="">
+            Default microphone
          </option>
    </select>
      </div>
@@ -123,7 +127,6 @@ const MediaConfiguration = ({state, user} : Props) => {
         >
            <option
            disabled={true}
-           selected={onPreset === 'HD' || user?.studio?.preset === 'HD'}
            value={'HD'}
            className='bg-[#171717] cursor-pointer'
            >
@@ -131,8 +134,8 @@ const MediaConfiguration = ({state, user} : Props) => {
              {user?.subscription?.plan === "FREE" && '(Upgrade to PRO plan)'}
            </option>
            <option
-           value={'SD'}
            selected={onPreset === "SD" || user?.studio?.preset === "SD"}
+           value={'SD'}
            className='bg-[#171717] cursor-pointer'
            >
            720p

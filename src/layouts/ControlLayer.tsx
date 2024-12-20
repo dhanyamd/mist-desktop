@@ -10,10 +10,14 @@ type Props = {
 
 const ControlLayer = ({children, className} : Props) => {
     const[isVisible, setIsVisible] = useState<boolean>(false)
-     window.ipcRenderer.on('hide-plugin', (event, payload) => {
-        console.log("PAYLOAD", payload)
-        setIsVisible(payload.state)
-    })
+    if (window.ipcRenderer) {
+        window.ipcRenderer.on('hide-plugin', (_event, payload) => {
+            console.log("PAYLOAD", payload)
+            setIsVisible(payload.state)
+        })
+    } else {
+        console.warn("ipcRenderer is not defined")
+    }
   return (
     <div className={cn(className, isVisible && "invisible", 
         "bg-[#171717] border-2 border-neutral-700 flex px-1 flex-col rounded-3xl overflow-hidden "

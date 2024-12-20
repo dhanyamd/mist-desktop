@@ -83,8 +83,8 @@ function createWindow() {
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
-    studio.loadURL(`${"http://localhost:5173"}/studio.html`);
-    floatingWebCam.loadURL(`${"http://localhost:5173"}/webcam.html`);
+    studio.loadURL(`${"http://localhost:5173/"}/studio.html`);
+    floatingWebCam.loadURL(`${"http://localhost:5173/"}/webcam.html`);
   } else {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
     studio.loadFile(path.join(RENDERER_DIST, "studio.html"));
@@ -117,7 +117,7 @@ ipcMain.handle("getSources", async () => {
   console.log("DISPLAYS", data);
   return data;
 });
-ipcMain.on("media-sources", (event, payload) => {
+ipcMain.on("media-sources", (_event, payload) => {
   console.log("PAYLOAD", payload);
   studio == null ? void 0 : studio.webContents.send("profile-received", payload);
 });
@@ -130,7 +130,7 @@ ipcMain.on("resize-studio", (_, payload) => {
     studio == null ? void 0 : studio.setSize(400, 250);
   }
 });
-ipcMain.on("hide-plugin", (event, payload) => {
+ipcMain.on("hide-plugin", (_event, payload) => {
   console.log("PAYLOAD", payload);
   win == null ? void 0 : win.webContents.send("hide-plugin", payload);
 });
