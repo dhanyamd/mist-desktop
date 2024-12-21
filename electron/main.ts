@@ -152,6 +152,7 @@ ipcMain.handle('getSources', async () => {
 
 ipcMain.on('media-sources', (_event, payload) => {
   console.log("PAYLOAD", payload)
+  console.log("coming from media-sources")
   studio?.webContents.send('profile-received', payload)
 })
 
@@ -168,7 +169,8 @@ ipcMain.on('resize-studio', (_, payload) => {
 })
 
 ipcMain.on('hide-plugin', (_event, payload) => {
-  console.log("PAYLOAD", payload)
+ // console.log("PAYLOAD", payload)
+  console.log("coming from hide-plugin")
   win?.webContents.send('hide-plugin', payload)
 })
 

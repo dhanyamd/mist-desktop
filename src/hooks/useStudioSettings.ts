@@ -34,62 +34,7 @@ export const useStudioSettings = (
         })
     }
   })
-  useEffect(() => {
-    if(screen && audio){
-        // Request media permissions
-        const requestMediaAccess = async () => {
-            try {
-                // Get audio stream
-                const audioStream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        deviceId: audio ? { exact: audio } : undefined
-                    },
-                    video: false  
-                });
-
-                // Get screen stream
-                const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
-                    video: {
-                        //@ts-ignore
-                      //  cursor: "always" ,
-                        displaySurface: "monitor",
-                        deviceId: screen ? { exact: screen } : undefined
-                    },
-                    audio: false 
-                });
-
-                // Store streams in state or handle them as needed
-                setResponseData({ audioStream, screenStream });
-                
-            } catch (error) {
-                console.error('Error accessing media devices:', error);
-                toast.error("Failed to access media devices");
-            }
-        };
-        
-        requestMediaAccess();
-        
-        // Listen for responses from main process
-        const handleResponse = (_: any, data: any) => {
-            setResponseData((prev: any) => ({...prev, ...data}));
-        }
-        
-        window.ipcRenderer.on('profile-received', handleResponse);
-        
-        // Existing IPC call
-        window.ipcRenderer.send('media-sources', {
-            screen,
-            id,
-            audio,
-            preset,
-            plan
-        });
-
-        return () => {
-            window.ipcRenderer.removeListener('profile-received', handleResponse);
-        }
-    }
-  }, [screen, audio, id, preset, plan]);
+ 
 
   useEffect(() => {
    const subscribe = watch((values) => {

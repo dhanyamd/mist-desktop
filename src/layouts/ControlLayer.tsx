@@ -14,6 +14,7 @@ const ControlLayer = ({children, className} : Props) => {
         window.ipcRenderer.on('hide-plugin', (_event, payload) => {
             console.log("PAYLOAD", payload)
             setIsVisible(payload.state)
+            console.log("coming from controllayer")
         })
     } else {
         console.warn("ipcRenderer is not defined")

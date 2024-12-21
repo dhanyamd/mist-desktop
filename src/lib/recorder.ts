@@ -6,18 +6,20 @@ let videoTransferFileName : string | undefined
 let mediaRecorder : MediaRecorder 
 let userId : string | undefined
 const socket = io(import.meta.env.VITE_SOCKET_URL as string)
-export const StartRecording = (onSources : {
+
+export const StartRecording = (onScources : {
     screen : string,
     audio : string,
     id : string
 }) => {
     hidePluginWindow(true)
-    videoTransferFileName = `${uuid()}-${onSources?.id?.slice(0,8)}.webm`
-    //@ts-ignore
+    videoTransferFileName = `${uuid()}-${onScources?.id.slice(0,8)}.webm`
     mediaRecorder.start(1000)
 }
-export const onStopRecording = () => mediaRecorder.stop();
+export const onStopRecording = () => mediaRecorder.stop()
+
 const stopRecording = () => {
+    alert("process-chunks")
     hidePluginWindow(false)
     socket.emit('process-chunks', {
         filename : videoTransferFileName ,
@@ -25,9 +27,10 @@ const stopRecording = () => {
     })
 }
 export const onDataAvailable = (e : BlobEvent) => {
+    alert("video-chunks")
   socket.emit('video-chunks', {
     chunks : e.data,
-    filename : videoTransferFileName
+    filenam : videoTransferFileName
   })
 }
 export const selectSources = async(
@@ -45,7 +48,7 @@ export const selectSources = async(
         video : {
             mandatory : {
                 chromeMediaSource: 'desktop',
-                chromeMedisSourceId : onSources.screen,
+                chromeMedisSourceId : onSources?.screen,
                 minWidth : onSources.preset === "HD" ? 1920 : 1280,
                 maxWidth : onSources.preset === "HD" ? 1920 : 1280,
                 minHeight : onSources.preset === "HD" ? 1080 : 720,
@@ -72,7 +75,8 @@ export const selectSources = async(
     mediaRecorder = new MediaRecorder(combineStream, {
         mimeType : 'video/webm; codecs=vp9'
     })
-    mediaRecorder.ondataavailable = onDataAvailable
-    mediaRecorder.onstart = stopRecording
+
+    mediaRecorder.ondataavailable = onDataAvailable;
+    mediaRecorder.onstart = stopRecording;
  }
 }

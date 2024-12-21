@@ -26,6 +26,7 @@ const StudioTray = () => {
     console.log(event) 
     console.log("is running")
     setOnSources(payload)
+    console.log("is running coming from studiotray line 29")
    })
     const videoElement = useRef<HTMLVideoElement | null>(null)
     useEffect(() => {
@@ -46,6 +47,7 @@ const StudioTray = () => {
         setCount(time)
         const recordingTime = videoRecordingTime(time)
         if(onSources?.plan === "FREE" && recordingTime.minute == "05"){
+            //WIP: make setRecording as fasle later 
             setRecording(false)
             clearTime()
             onStopRecording()
@@ -55,7 +57,7 @@ const StudioTray = () => {
             setOnTimer('00:00:00')
             clearInterval(recordTimeInterval)
         }
-     },1)
+     } , 1)
      return () => clearInterval(recordTimeInterval)
     },[recording])
 
@@ -69,7 +71,7 @@ const StudioTray = () => {
          <video 
          autoPlay 
         ref={videoElement}
-        className={"w-6/12 border-2 self-end bg-white"}
+        className={cn("w-6/12 border-2 self-end bg-white")}
          />
        )}
         <div className="rounded-full flex justify-around items-center h-20 w-full border-2 bg-[#171717] draggable border-white/40"
