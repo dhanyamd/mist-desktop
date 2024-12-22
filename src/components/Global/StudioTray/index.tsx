@@ -102,7 +102,7 @@ const StudioTray = () => {
                  />
               ) : (
                 <Square 
-                className="cursor-pointer hover:scale-110 transform transition duration-150"
+                className="cursor-pointer non-draggable hover:scale-110 transform transition duration-150"
                 fill="white"
                 size={32}
                 onClick={() => {

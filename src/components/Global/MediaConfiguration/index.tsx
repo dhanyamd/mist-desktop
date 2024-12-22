@@ -46,7 +46,7 @@ const MediaConfiguration = ({state, user} : Props) => {
     )
     console.log("STATE", state)
 
-    useEffect(() => {
+   useEffect(() => {
         const requestMediaAccess =  async() => {
             try {
                 // Request microphone access
@@ -90,9 +90,9 @@ const MediaConfiguration = ({state, user} : Props) => {
         >
             {state?.displays?.map((display, key) => (
                 <option
-                //selected={ activeScreen?.id === display.id}
+             //  selected={ activeScreen?.id === display.id}
                 value={display.id}
-                className='bg-[#171717] cursor-pointer'
+                className='bg-[#171717]  cursor-pointer'
                 key={key}
                 >
                  {display?.name } 

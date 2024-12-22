@@ -19,7 +19,7 @@ export const StartRecording = (onScources : {
 export const onStopRecording = () => mediaRecorder.stop()
 
 const stopRecording = () => {
-    alert("process-chunks")
+    //alert("process-chunks")
     hidePluginWindow(false)
     socket.emit('process-chunks', {
         filename : videoTransferFileName ,
@@ -27,10 +27,10 @@ const stopRecording = () => {
     })
 }
 export const onDataAvailable = (e : BlobEvent) => {
-    alert("video-chunks")
+   // alert("video-chunks")
   socket.emit('video-chunks', {
     chunks : e.data,
-    filenam : videoTransferFileName
+    filename : videoTransferFileName
   })
 }
 export const selectSources = async(
