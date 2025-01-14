@@ -20,7 +20,7 @@ function createWindow() {
     hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
-    focusable: false,
+    focusable: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
@@ -40,7 +40,7 @@ function createWindow() {
     hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
-    focusable: false,
+    focusable: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
@@ -60,7 +60,7 @@ function createWindow() {
     hasShadow: false,
     transparent: true,
     alwaysOnTop: true,
-    focusable: false,
+    focusable: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       nodeIntegration: false,
@@ -83,8 +83,8 @@ function createWindow() {
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
-    studio.loadURL(`${"http://localhost:5173/"}/studio.html`);
-    floatingWebCam.loadURL(`${"http://localhost:5173/"}/webcam.html`);
+    studio.loadURL(`${"http://localhost:5173"}/studio.html`);
+    floatingWebCam.loadURL(`${"http://localhost:5173"}/webcam.html`);
   } else {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
     studio.loadFile(path.join(RENDERER_DIST, "studio.html"));

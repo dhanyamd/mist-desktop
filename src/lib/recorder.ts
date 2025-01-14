@@ -22,8 +22,8 @@ const stopRecording = () => {
     //alert("process-chunks")
     hidePluginWindow(false)
     socket.emit('process-chunks', {
-        filename : videoTransferFileName ,
-        userId
+        userId,
+        filename : videoTransferFileName
     })
 }
 export const onDataAvailable = (e : BlobEvent) => {
@@ -76,7 +76,7 @@ export const selectSources = async(
         mimeType : 'video/webm; codecs=vp9'
     })
 
-    mediaRecorder.ondataavailable = onDataAvailable;
-    mediaRecorder.onstart = stopRecording;
+    mediaRecorder.ondataavailable = onDataAvailable
+    mediaRecorder.onstop = stopRecording
  }
 }
